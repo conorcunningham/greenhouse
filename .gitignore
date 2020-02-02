@@ -1,0 +1,12 @@
+.idea
+idea
+db.sqlite3
+pycache
+temp
+temp.py
+.DS_Store
+env
+.env
+venv
+.venv
+__pycache__
