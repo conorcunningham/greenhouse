@@ -3,8 +3,8 @@
 #include <PubSubClient.h>
 #include "ArduinoJson.h"
 
-const char* ssid     = "chillies";
-const char* password = "not-my-password";
+const char* ssid     = "MyWirelessNetwork";
+const char* password = "not my password";
 const char* mqtt_server = "192.168.2.10";
 
 WiFiClient espClient;
@@ -62,21 +62,45 @@ void setup() {
 }
 
 void callback(char* topic, byte* message, unsigned int length) {
+  // let's parse this as json
+  StaticJsonDocument<1024> doc;
+  DeserializationError error = deserializeJson(doc, message, length);
+  if (error) {
+
+    // it' not JSON, so let's parse it as bytes
+    Serial.print("Message arrived on topic: ");
+    Serial.print(topic);
+    Serial.print(". Message: ");
+    String messageTemp;
+
+    for (int i = 0; i < length; i++) {
+      Serial.print((char)message[i]);
+      messageTemp += (char)message[i];
+    }
+    Serial.println();
+  }
+
+  // we're here, so the message was valid json
+  // get the parsed values and assign to variables
+  const char * sensorType = doc["sensorType"]; //Get sensor type value
+  int temperature = doc["temperature"];
+  int humidity = doc["humidity"];
+
   Serial.print("Message arrived on topic: ");
   Serial.print(topic);
-  Serial.print(". Message: ");
-  String messageTemp;
-
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)message[i]);
-    messageTemp += (char)message[i];
-  }
+  Serial.print(". Temp: ");
+  Serial.print(temperature);
+  Serial.print(". Humidity: ");
+  Serial.print(humidity);
+  Serial.println();
+  serializeJson(doc, Serial); //output the raw JSON to serial
   Serial.println();
 
   // Feel free to add more if statements to control more GPIOs with MQTT
 
   // If a message is received on the topic esp32/output, you check if the message is either "on" or "off".
   // Changes the output state according to the message
+  /**
   if (String(topic) == "esp32/output") {
     Serial.print("Changing output to ");
     if(messageTemp == "on"){
@@ -87,7 +111,9 @@ void callback(char* topic, byte* message, unsigned int length) {
       Serial.println("off");
       //digitalWrite(ledPin, LOW);
     }
-  }
+   }
+  **/
+
 }
 
 void reconnect() {
@@ -111,52 +137,27 @@ void reconnect() {
 
 void loop() {
 
-  /**
-  JSON Code
-  **/
 
-  DynamicJsonDocument doc(1024);
-
-  doc["sensorType"] = "temperature";
-  //doc["raw"] = serialized("[1,2,3]");
-  doc["value"] = 28;
-  serializeJson(doc, Serial);
-
-  char buffer[512];
-  size_t payload_size = serializeJson(doc, buffer);
-  //serializeJson(doc, buffer);
-
-  // deserialize incoming JSON
-  char json[] = "{\"sensorType\":\"temperature\",\"value\":30}";
-  DeserializationError error = deserializeJson(doc, json);
-  if (error)
-    return;
-
-  // get the parsed values and assign to variables
-  const char * sensorType = doc["sensorType"]; //Get sensor type value
-  int value = doc["value"];
-
-
-
+  // make sure we're connected to the MQTT broker
   if (!client.connected()) {
     reconnect();
   }
-  client.loop();
-  // put your main code here, to run repeatedly:
+  client.loop();  // enter the MQTT loop
+
+  // get and print DHT22 values
   TempAndHumidity lastValues = dht.getTempAndHumidity();
+  Serial.println("Transmit Temperature: " + String(lastValues.temperature,0));
+  Serial.println("Transmit Humidity: " + String(lastValues.humidity,0));
 
-  temp = lastValues.temperature;
-  hum = lastValues.humidity;
-  mqtt_temp = "temperature: " + String(temp, 0);
-  mqtt_hum = "humidity: " + String(hum, 0);
-  strcpy(transmit_temp, mqtt_temp.c_str());
-  strcpy(transmit_hum, mqtt_hum.c_str());
+  // build a JSON object and transmit
 
+  DynamicJsonDocument doc(1024);
+  doc["sensorType"] = "dht22";
+  doc["temperature"] = lastValues.temperature;
+  doc["humidity"] = lastValues.humidity;
 
-  Serial.println("Temperature: " + String(lastValues.temperature,0));
-  Serial.println("Humidity: " + String(lastValues.humidity,0));
-  client.publish("test", transmit_temp);
-  client.publish("test", transmit_hum);
+  char buffer[512];
+  size_t payload_size = serializeJson(doc, buffer);
   client.publish("test", buffer, payload_size);
 
   delay(2000);
