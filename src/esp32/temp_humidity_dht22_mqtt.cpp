@@ -78,6 +78,7 @@ void callback(char* topic, byte* message, unsigned int length) {
       messageTemp += (char)message[i];
     }
     Serial.println();
+    return;
   }
 
   // we're here, so the message was valid json
@@ -155,10 +156,10 @@ void loop() {
   doc["sensorType"] = "dht22";
   doc["temperature"] = lastValues.temperature;
   doc["humidity"] = lastValues.humidity;
+  doc["sensor_name"] = "propagator";
 
   char buffer[512];
   size_t payload_size = serializeJson(doc, buffer);
-  client.publish("test", buffer, payload_size);
-
-  delay(2000);
+  client.publish("sensor/temp_hum/propagator", buffer, payload_size);
+  delay(5000); // wait 5 seconds before starting from the top of the loop
 }

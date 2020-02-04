@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  web:
+    build: .
+    command: python /code/manage.py runserver 0.0.0.0:8000
+    # command: gunicorn eclinic_project.wsgi -b 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    environment:
+      - SECRET=T7QjHfCFvl+P1dSN1lwPZFmTuOLw3LB7ldpm8fXCYd8=
+      - ENV=dev
+      - DATABASE=eclinic
+      - DBUSER=postgres
+      - DBPASSWORD=postgres
+      - DBHOST=db
+
+  db:
+    image: postgres:11
+    volumes:
+      - greenhouse:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+
+volumes:
+  greenhouse:

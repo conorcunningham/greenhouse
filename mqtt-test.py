@@ -1,5 +1,6 @@
 import paho.mqtt.client as mqtt
 from src.callbacks import *
+from collections import deque
 
 USER = "test"
 PASS = "testing123"
@@ -31,7 +32,7 @@ def main():
     client.connect(HOSTNAME)
 
     # Let's subscribe to the topic 'test'
-    client.subscribe("test")
+    client.subscribe("sensor/temp_hum/propagator")
 
     # start mqtt client loop
     client.loop_start()
