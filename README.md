@@ -3,7 +3,7 @@
 This is a work in progress and there will be many, many breaking changes.
 
 ## ESP32
-Code for sensing temperature and humidity data, and transmitting that data encoded in JSON over MQTT is found in [temp_humidity_dht22_mqtt.cpp](.src/esp32/temp_humidity_dht22_mqtt.cpp)
+Code for sensing temperature and humidity data, and transmitting that data encoded in JSON over MQTT is found in [temp_humidity_dht22_mqtt.cpp](./src/esp32/temp_humidity_dht22_mqtt.cpp)
 
 ## Python MQTT client
 Included is a small test client for MQTT written in Python. It currently does the following:
@@ -12,7 +12,7 @@ Included is a small test client for MQTT written in Python. It currently does th
 * Listens for MQTT topics as retrieved from the API
 * If a topic is retrieved from a sensor that was fecthed from the API, it will then POST the payload of the message to the API
 
-The main program file can be found here: [mqtt-test.py](.src/mqtt-test.py)
+The main program file can be found here: [mqtt-test.py](mqtt-test.py)
 
 ## Django API
 
