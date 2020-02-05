@@ -18,6 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = os.environ.get("SECRET", default="imalittledebugteapotlovelyandwarm")
 DEBUG = True if os.environ.get("ENV", default="prod") == "dev" else False
+DEBUG = True
 PRODUCTION = True if os.environ.get("ENV", default="prod") == "prod" else False
 ALLOWED_HOSTS = ["*"] if DEBUG else ["your url here"]
 APPEND_SLASH = False
