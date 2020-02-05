@@ -102,7 +102,7 @@ PROD_DB = {
         "NAME": os.environ.get("DATABASE", default="greenhouse"),
         "USER": os.environ.get("DBUSER", default="postgres"),
         "PASSWORD": os.environ.get("DBPASSWORD", default="postgres"),
-        "HOST": os.environ.get("DBHOST", default="localhost"),
+        "HOST": os.environ.get("DBHOST", default="192.168.2.10"),
         # 'OPTIONS': {'sslmode': 'require'},
         "PORT": 5432,
     }
