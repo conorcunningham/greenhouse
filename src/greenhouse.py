@@ -8,7 +8,7 @@ class Greenhouse:
 
     def __init__(self, host, username, password):
         self.host = host
-        self.user = username,
+        self.username = username,
         self.password = password
         self.token = None
         self.refresh = None
@@ -20,9 +20,10 @@ class Greenhouse:
         Gets a token for the API
         :return: Dict representing the token or an error message
         """
-        url = host + 'token'
+        print(self.username, self.password, self.host)
+        url = self.host + 'token'
         post = httpx.post(
-            url, json={"username": username, "password": password}
+            url, json={"username": self.username[0], "password": self.password}
         )
 
         if post.status_code == 200:
@@ -32,17 +33,18 @@ class Greenhouse:
             self.token_timestamp = datetime.now()
             return json.loads(post.text)
         else:
+            print(post.content)
             return {"error": "error fecthing token"}
 
     def fetch_data(self, url: str) -> Dict:
-        url = host + url
+        url = self.host + url
         data = httpx.get(url, headers=self.headers)
         if data.status_code == 200:
             return json.loads(data.text)
         return {"error": "retieve failed", "errorcode": data.status_code}
 
     def add_sensor_values(self, data: Dict):
-        url = host + "sensor-values"
+        url = self.host + "sensor-values"
         request = httpx.post(
             url=url,
             headers=self.headers,
@@ -54,7 +56,7 @@ class Greenhouse:
         return {"error": "error posting", "error_code": request.status_code}
 
     def add_temperature_values(self, data: Dict):
-        url = host + "temperatures"
+        url = self.host + "temperatures"
         request = httpx.post(
             url=url,
             headers=self.headers,

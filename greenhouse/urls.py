@@ -11,4 +11,6 @@ router.register("temperatures", TempHumViewSet, basename="temperatures")
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("", HomePageView.as_view(), name="home"),
+    path("propagator", PropagatorView.as_view(), name="propagator")
 ]

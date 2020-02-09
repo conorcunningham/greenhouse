@@ -1,0 +1,38 @@
+{% extends '_base.html' %}
+
+{% block content %}
+
+<canvas id="myChart"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+let ctx = document.getElementById('myChart').getContext('2d');
+let chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: {{ time|safe }},
+        datasets: [{
+            label: 'Temperature',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            fill: false,
+            data: {{ temp }}
+        },
+        {
+            label: 'Humidity',
+            backgroundColor: 'rgb(16, 99, 234)',
+            borderColor: 'rgb(16, 99, 234)',
+            fill: false,
+            data: {{ hum }}
+        }
+        ]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+</script>
+
+{% endblock %}

@@ -1,15 +1,40 @@
 from collections import deque
-from . api import Greenhouse
+from . greenhouse import Greenhouse
 import json
+import yaml
+import pathlib
 
 # initialise our message queue
 messages = deque(maxlen=1000)
 
-# auth parameters for django greenhouse
-username = 'conor'
-password = 'aphextwin21'
-host = "https://greenhouse.cunningtek.com/api/"
-host = "http://localhost/api/"
+config_file = pathlib.Path.cwd() / 'greenhouse-config.yml'
+
+# Read YAML configuration file and set initial parameters for logfile and api key
+with config_file.open(mode='r') as stream:
+    try:
+        config = yaml.safe_load(stream)
+        print(config)
+        if 'username' in config:
+            username = config['username']
+        else:
+            print(f"username must be defined in {config_file}")
+            exit(1)
+
+        if 'password' in config:
+            password = config['password']
+        else:
+            print(f"password must be defined in {config_file}")
+            exit(1)
+
+        if 'host' in config:
+            host = config['host']
+        else:
+            print(f"host must be defined in {config_file}")
+            exit(1)
+
+    except yaml.YAMLError:
+        print(f"There was an error loading configuration file: {config_file}")
+        exit(1)
 
 # initialize a new greenhouse instance and get a token
 greenhouse = Greenhouse(host, username, password)

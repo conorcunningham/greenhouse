@@ -8,5 +8,6 @@ urlpatterns = [
     path("api/refresh", TokenRefreshView.as_view(), name="token_refresh"),
     # the rest to go to greenhouse
     path("api/", include("greenhouse.urls")),
+    path("accounts/", include("allauth.urls")),
     path("", include("greenhouse.urls")),
 ]
