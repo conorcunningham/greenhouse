@@ -1,13 +1,24 @@
 from collections import deque
-from . api import fetch_data, add_sensor_values, add_temperature_values
+from . api import Greenhouse
 import json
 
 # initialise our message queue
 messages = deque(maxlen=1000)
 
+# auth parameters for django greenhouse
+username = 'conor'
+password = 'aphextwin21'
+host = "https://greenhouse.cunningtek.com/api/"
+host = "http://localhost/api/"
+
+# initialize a new greenhouse instance and get a token
+greenhouse = Greenhouse(host, username, password)
+print(greenhouse.get_token())
+
+
 # get all topics and sensors from the API
-topics_data = fetch_data("topics")
-sensors_data = fetch_data("sensors")
+topics_data = greenhouse.fetch_data("topics")
+sensors_data = greenhouse.fetch_data("sensors")
 print(f"{topics_data=}")
 print(f"{sensors_data=}")
 
@@ -23,11 +34,12 @@ for sensor in sensors_data:
     sensors[sensor["name"]] = sensor["id"]
 
 
+# noinspection PyUnusedLocal
 def on_message(client, userdata, message):
     payload = json.loads(message.payload.decode("utf-8"))
     print(f"{payload=}")
 
-    #print("message client=", client._client_id)
+    # print("message client=", client._client_id)
     print("message received ", str(message.payload.decode("utf-8")))
     print("message topic=", message.topic)
     print("message qos=", message.qos)
@@ -51,7 +63,7 @@ def on_message(client, userdata, message):
                 "temperature": payload["temperature"],
                 "humidity": payload["humidity"]
             }
-            request = add_temperature_values(data)
+            request = greenhouse.add_temperature_values(data)
             if "error" in request:
                 print(request["error"], request["error_code"])
 
