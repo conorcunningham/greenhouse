@@ -65,6 +65,7 @@ class TempHumViewSet(viewsets.ModelViewSet):
     queryset = TempHum.objects.all()
 
 
+@api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
-def aruba_alerts():
+def aruba_alerts(request):
     return Response({"Greeting": "Hello from my greenhouse!"})
