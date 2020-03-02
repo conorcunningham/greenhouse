@@ -11,4 +11,5 @@ router.register("temperatures", TempHumViewSet, basename="temperatures")
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("aruba-alerts", aruba_alerts, name="aruba-alert")
 ]

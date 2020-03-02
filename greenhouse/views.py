@@ -1,5 +1,8 @@
 from django.shortcuts import render
-from rest_framework import generics, viewsets
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
 from . serializers import *
 from . models import Sensor, Topic, SensorTopic, SensorValue, TempHum
 
@@ -28,3 +31,7 @@ class TempHumViewSet(viewsets.ModelViewSet):
     serializer_class = TempHumSerializer
     queryset = TempHum.objects.all()
 
+
+@permission_classes([AllowAny])
+def aruba_alerts():
+    return Response({"Greeting": "Hello from my greenhouse!"})
