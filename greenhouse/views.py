@@ -12,7 +12,7 @@ class HomePageView(TemplateView):
     login_url = "accounts/login/"
 
 
-class PropagatorView(LoginRequiredMixin, TemplateView):
+class PropagatorView(TemplateView):
     template_name = "propagator.html"
 
     def get_context_data(self, **kwargs):

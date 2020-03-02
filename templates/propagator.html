@@ -2,13 +2,29 @@
 
 {% block content %}
   <h2>Temperate and Humidity for {{ name }}</h2>
-  <h5>Average Temperature: {{ avg_temp }} degrees celcius</h5>
+  <h5>Average Temperature: {{ avg_temp }}&deg; celcius</h5>
   <h5>Average Humidity: {{ avg_hum }}%</h5>
 
   <canvas id="myChart"></canvas>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   <!--suppress JSUnresolvedFunction -->
   <script>
+      const c = getCookie("sessionid");
+
+      // Create a request variable and assign a new XMLHttpRequest object to it.
+      let request = new XMLHttpRequest();
+
+      // Open a new connection, using the GET request on the URL endpoint
+      request.open('GET', 'http://localhost:8000/sensors', true);
+
+      request.onload = function () {
+          // Begin accessing JSON data here
+          alert(request.responseText)
+      };
+
+      // Send request
+      request.send();
+
       let ctx = document.getElementById('myChart').getContext('2d');
       let chart = new Chart(ctx, {
           // The type of chart we want to create
@@ -37,6 +53,12 @@
           // Configuration options go here
           options: {}
       });
+
+      function getCookie(name) {
+          let value = "; " + document.cookie;
+          let parts = value.split("; " + name + "=");
+          if (parts.length === 2) return parts.pop().split(";").shift();
+      }
   </script>
 
 {% endblock %}
