@@ -63,3 +63,6 @@ class TempHum(models.Model):
         return f"{self.sensor.name} {self.temp} degrees {self.humidity}% humidity"
 
 
+class Webhook(models.Model):
+    params = models.TextField(max_length=16000)
+    data = models.TextField(max_length=16000)

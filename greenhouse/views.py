@@ -8,6 +8,7 @@ from . models import Sensor, Topic, SensorTopic, SensorValue, TempHum
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from statistics import mean
+from django.utils.html import escape
 
 
 class HomePageView(TemplateView):
@@ -68,4 +69,7 @@ class TempHumViewSet(viewsets.ModelViewSet):
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def aruba_alerts(request):
+    Webhook(params=str(request.query_params), data=str(request.data)).save()
+    # print(str(request.data))
+    # print(str(request.query_params))
     return Response({"Greeting": "Hello from my greenhouse!"})

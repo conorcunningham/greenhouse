@@ -22,6 +22,11 @@ class TempHumAdmin(admin.ModelAdmin):
     list_display = ("id", "sensor", "temperature", "humidity", "timestamp")
 
 
+class WebhookAdmin(admin.ModelAdmin):
+    list_display = ("id", "params", "data")
+
+
+admin.site.register(Webhook, WebhookAdmin)
 admin.site.register(Sensor, SensorAdmin)
 admin.site.register(Topic, TopicAdmin)
 admin.site.register(SensorValue, SensorValueAdmin)
