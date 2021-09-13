@@ -20,7 +20,7 @@ services:
       - DBHOST=db
 
   db:
-    image: postgres:11
+    image: postgres:13
     volumes:
       - greenhouse:/var/lib/postgresql/data/
     ports:

@@ -71,6 +71,6 @@ class TempHumViewSet(viewsets.ModelViewSet):
 def aruba_alerts(request):
     data = str(request.data) + str(request.headers)
     Webhook(params=str(request.query_params), data=data).save()
-    # print(str(request.data))
+    print(str(request))
     # print(str(request.query_params))
     return Response({"Greeting": "Hello from my greenhouse!"})
